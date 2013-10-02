@@ -16,7 +16,6 @@
 \usepackage{geometry}
 \geometry{a4paper,top=2cm,bottom=2cm,left=1cm,right=1cm}
 
-
 $if(euro)$
   \usepackage{eurosym}
 $endif$
