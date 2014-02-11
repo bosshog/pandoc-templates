@@ -1,4 +1,8 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{color}
+\usepackage{soul}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -8,6 +12,11 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[utf8]{inputenc}
+
+\usepackage{geometry}
+\geometry{a4paper,top=2cm,bottom=2cm,left=1cm,right=1cm}
+
+
 $if(euro)$
   \usepackage{eurosym}
 $endif$
@@ -20,6 +29,7 @@ $endif$
   \fi
   \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
   \newcommand{\euro}{€}
+
 $if(mainfont)$
     \setmainfont{$mainfont$}
 $endif$
@@ -40,7 +50,7 @@ $if(geometry)$
 $endif$
 $if(natbib)$
 \usepackage{natbib}
-\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+\biblio$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
 $endif$
 $if(biblatex)$
 \usepackage{biblatex}
@@ -61,7 +71,7 @@ $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 $endif$
 $if(tables)$
-\usepackage{longtable,booktabs}
+\usepackage{longtable, booktabs}
 $endif$
 $if(graphics)$
 \usepackage{graphicx}
@@ -70,20 +80,40 @@ $if(graphics)$
 % Images get their normal width if they fit onto the page, but
 % are scaled down if they would overflow the margins.
 \makeatletter
-\def\ScaleIfNeeded{%
+\def\ImgRatio {%
+      \Gin@nat@width/\Gin@nat@height
+}
+
+\makeatletter
+\def\PageRatio {%
+      \linewidth/\lineheight
+}
+
+\makeatletter
+\def\ScaleWidthIfNeeded{%
   \ifdim\Gin@nat@width>\linewidth
     \linewidth
   \else
     \Gin@nat@width
   \fi
 }
+
+\makeatletter
+\def\ScaleHeightIfNeeded{%
+  \ifdim\Gin@nat@height>\textheight
+    \textheight
+  \else
+    \Gin@nat@height
+  \fi
+}
 \makeatother
 \let\Oldincludegraphics\includegraphics
 {%
  \catcode`\@=11\relax%
- \gdef\includegraphics{\@ifnextchar[{\Oldincludegraphics}{\Oldincludegraphics[width=\ScaleIfNeeded]}}%
+ \gdef\includegraphics{\@ifnextchar[{\Oldincludegraphics}{\Oldincludegraphics[width=\ScaleWidthIfNeeded, height=\ScaleHeightIfNeeded, keepaspectratio]}}%
 }%
 $endif$
+
 \ifxetex
   \usepackage[setpagesize=false, % page size defined by xetex
               unicode=false, % unicode breaks when used with xetex
@@ -129,6 +159,9 @@ $if(lang)$
   \usepackage[$lang$]{babel}
 \fi
 $endif$
+$for(header-includes)$
+$header-includes$
+$endfor$
 
 $if(title)$
 \title{$title$}
@@ -138,18 +171,13 @@ $if(subtitle)$
 $endif$
 \author{$for(author)$$author$$sep$ \and $endfor$}
 \date{$date$}
-$for(header-includes)$
-$header-includes$
-$endfor$
+
+\pagestyle{fancy}
+\cfoot{\thepage\ of \pageref{LastPage} }
 
 \begin{document}
 $if(title)$
 \maketitle
-$endif$
-$if(abstract)$
-\begin{abstract}
-$abstract$
-\end{abstract}
 $endif$
 
 $for(include-before)$
@@ -186,4 +214,6 @@ $for(include-after)$
 $include-after$
 
 $endfor$
+
+
 \end{document}
