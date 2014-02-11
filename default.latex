@@ -80,8 +80,6 @@ $if(graphics)$
 % Images get their normal width if they fit onto the page, but
 % are scaled down if they would overflow the margins.
 \makeatletter
-
-\makeatletter
 \def\ScaleWidthIfNeeded{%
   \ifdim\Gin@nat@width>\linewidth
     \linewidth
